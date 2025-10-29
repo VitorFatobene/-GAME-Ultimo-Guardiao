@@ -1,0 +1,55 @@
+body{
+    background-image: url("/imagens/floresta.gif");
+    background-size: cover;
+}
+
+h1{
+    text-align: center;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top: 5%;
+    font-size: 60px;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.botoes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    gap: 30px;
+}
+
+.botao_menu{
+    width: 200px;
+    background-color: #cb9d56;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.botao_menu:hover{
+    transform: scale(1.02);
+}
+
+.botao_menu a {
+    color: white;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+h2:hover{
+    transition: 0.2s;
+    transform: scale(1.02);
+}
+

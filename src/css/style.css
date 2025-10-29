@@ -1,0 +1,95 @@
+body{
+    background-image: url("/imagens/fundo.gif");
+    background-size: cover;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top: 5%;
+    font-size: 50px;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+h2{
+    text-align: center;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top: 2%;
+    font-size: 30px;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.classes {
+    display: flex;
+    justify-content: center;
+    gap: 150px;
+    margin-top: 10px;
+}
+
+.imagens{
+    width: 150px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+#guerreiro:hover{
+    transform: scale(1.05);
+    
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+
+#mago:hover{
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+#necromante:hover{
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.informacoes{
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding-left: 50px;
+}
+
+
+.classe .informacoes {
+  opacity: 0;
+  transition: opacity 0.4s;
+  background-color: rgba(203, 157, 86);
+  border-radius: 5px;
+}
+
+.classe:hover .informacoes {
+  opacity: 1;
+}
+
+.botao_escolher{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.botao_escolher:hover{
+    transform: scale(1.03);
+}
+
+#escolher{
+    background-color: #cb9d56;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+
