@@ -3,17 +3,40 @@ import { Guerreiro } from "./classes/entidades/Guerreiro";
 import { Mago } from "./classes/entidades/Mago";
 import { Necromante } from "./classes/entidades/Necromante";
 
+function removerClicada() {
+    imagens.forEach(function (i) {
+        i.classList.remove("selecionada");
+    });
+}
+
+function verificarClasse(){
+    try{
+        if(classeSelecionada == false){
+            throw new Error("Selecione uma classe")
+        }
+        window.location.href = "/html/combate.html"
+    }catch(erro){
+        alert((erro as Error).message)
+    }
+}
+
 const imagens = document.querySelectorAll<HTMLImageElement>(".imagens")
 const botao = document.getElementById("escolher") as HTMLButtonElement
+let classeSelecionada: boolean = false;
 const guerreiro = new Guerreiro("Vitor", 40, 2, 100, 50, "Espada do Deus do Trovão", 8);
 const mago = new Mago("maguinho", 30, 20, 65, 40,"Cajado Lendário do dragão", 7);
 const necromante = new Necromante("Necromante", 25, 25, 50, 35,"Varinha Do Rei Antigo", 9);
-let classeSelecionada: boolean = false;
-sessionStorage.setItem("nome", "Vitor")
-console.log(guerreiro)
-console.log(mago)
-console.log(necromante)
+const magoTeste = {
+    nome: mago.getNome(),
+    forca: mago.getForca(),
+    mana: mago.getMana(),
+    vida: mago.getVida(),
+    dano: mago.getDano(),
+    equipamento: mago.getEquipamento(),
+    inteligencia: mago.getInteligencia(),
+};
 
+localStorage.setItem("classeEscolhida", JSON.stringify(magoTeste));
 
 imagens.forEach(function (img){
     img.addEventListener("click", function(){
@@ -23,18 +46,7 @@ imagens.forEach(function (img){
     })
 })
 
-function removerClicada() {
-    imagens.forEach(function (i) {
-        i.classList.remove("selecionada");
-    });
-}
+botao.addEventListener("click", verificarClasse)
 
-botao.addEventListener("click", function(){
-    if(classeSelecionada == false){
-        alert("Por favor, selecione uma classe")
-    }else{
-        window.location.href = "/html/combate.html"
-    }
-})
 
 
