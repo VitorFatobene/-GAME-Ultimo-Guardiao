@@ -1,0 +1,35 @@
+body{
+    background-image: url(./imagens/fundo_batalha.png);
+}
+
+.imagem{
+    display: flex;
+    justify-content: center;
+}
+
+
+.classe-orc{
+    width: 150px;
+}
+
+/* Coloca as duas divs lado a lado */
+.container-combate,
+.imagem {
+    display: inline-block;
+    vertical-align: middle;
+    width: 45%; /* cada lado ocupa meio da tela */
+    text-align: center;
+}
+
+/* Classe do jogador (classe selecionada) */
+#imagem-classe {
+    width: 450px;
+    image-rendering: pixelated;
+}
+
+/* Orc */
+.classe-orc {
+    width: 250px;
+    image-rendering: pixelated;
+    transform: scaleX(-1); /* faz olhar para o jogador */
+}

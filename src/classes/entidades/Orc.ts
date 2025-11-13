@@ -59,7 +59,7 @@ export class Orc extends Classe_Mae{
     }
 
     public atacar(): void {
-        console.log("Necromante atacou com " + this.equipamento + " e desferiu " + this.dano.toFixed(2) +
+        console.log("Orc atacou com " + this.equipamento + " e desferiu " + this.dano.toFixed(2) +
             " de dano");
     }
 }
