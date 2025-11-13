@@ -1,10 +1,7 @@
-import {Classe_Mae} from "./Classe_Mae.js";
-export class Necromante extends Classe_Mae{
-    private inteligencia: number;
-
-    constructor(nome: String, forca: number, mana: number, vida: number, dano: number, equipamento: String, inteligencia: number){
+import {Classe_Mae} from "./Classe_Mae";
+export class Orc extends Classe_Mae{
+    constructor(nome: String, forca: number, mana: number, vida: number, dano: number, equipamento: String){
         super(nome, forca, mana, vida, dano, equipamento);
-        this.inteligencia = inteligencia;
     }
 
     public getNome(): String{
@@ -57,22 +54,12 @@ export class Necromante extends Classe_Mae{
         return "Nome: " + this.nome + ", Forca: " + this.forca + ", Mana: " + this.mana + ", Vida: " + this.vida + ", Equipamento: " + this.equipamento + ", Inteligencia: " + this.inteligencia;
     }
     
-
-    public getInteligencia(): number{
-        return this.inteligencia;
-    }
-    
-    public setInteligencia(inteligencia : number) {
-        this.inteligencia = inteligencia;
-    }
-
     public calcularDano(): void{
-        this.dano = this.inteligencia * ((this.inteligencia * 0.1) + (this.mana * 0.1));
+        this.dano = 1 * ( + (this.mana * 0.1));
     }
 
     public atacar(): void {
         console.log("Necromante atacou com " + this.equipamento + " e desferiu " + this.dano.toFixed(2) +
             " de dano");
     }
-
 }
