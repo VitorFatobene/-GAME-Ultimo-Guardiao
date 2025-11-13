@@ -18,12 +18,11 @@
 
         function iniciarMusica() {
         audio.play().catch(err => console.log(err));
-        // depois que tocar uma vez, não precisa ouvir de novo o clique
+
         window.removeEventListener('click', iniciarMusica);
         window.removeEventListener('keydown', iniciarMusica);
     }
 
-        // qualquer clique ou tecla inicia a música
         window.addEventListener('click', iniciarMusica);
         window.addEventListener('keydown', iniciarMusica);
    </script>
