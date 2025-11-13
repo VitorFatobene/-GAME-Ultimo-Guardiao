@@ -7,11 +7,25 @@
     <link rel="stylesheet" href="/menu_principal.css">
 </head>
 <body>
-    <audio src="/trilha/1.MainTheme-320bit(chosic.com).mp3" autoplay loop controls></audio>
+    <!-- <audio src="/trilha/1.MainTheme-320bit(chosic.com).mp3" autoplay loop></audio> -->
     <h1>O ÚLTIMO GUARDIÃO</h1>
     <div class="botoes">
         <button class="botao_menu"><a href="index.html">JOGAR</a></button>
         <button class="botao_menu" id="botao_credito">CRÉDITOS</button>
     </div>
+     <script defer>
+        const audio = document.getElementById('bgm');
+
+        function iniciarMusica() {
+        audio.play().catch(err => console.log(err));
+        // depois que tocar uma vez, não precisa ouvir de novo o clique
+        window.removeEventListener('click', iniciarMusica);
+        window.removeEventListener('keydown', iniciarMusica);
+    }
+
+        // qualquer clique ou tecla inicia a música
+        window.addEventListener('click', iniciarMusica);
+        window.addEventListener('keydown', iniciarMusica);
+   </script>
 </body>
 </html>
