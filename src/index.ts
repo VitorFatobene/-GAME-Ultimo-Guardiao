@@ -2,6 +2,7 @@ import { Classe_Mae } from "./classes/entidades/Classe_Mae";
 import { Guerreiro } from "./classes/entidades/Guerreiro";
 import { Mago } from "./classes/entidades/Mago";
 import { Necromante } from "./classes/entidades/Necromante";
+import { Orc } from "./classes/entidades/Orc";
 
 // ---------------- FUNÇÕES DA TELA DE SELEÇÃO ----------------
 
@@ -14,6 +15,7 @@ let indiceClicado: number | null = null;
 const guerreiro = new Guerreiro("Vitor", 40, 2, 100, 50, "Espada do Deus do Trovão", 8);
 const mago = new Mago("maguinho", 30, 20, 65, 40, "Cajado Lendário do dragão", 7);
 const necromante = new Necromante("Necromante", 25, 25, 50, 35, "Varinha Do Rei Antigo", 9);
+const orc = new Orc("Orc bravo", 40, 10, 50, 20, "Machado cego")
 
 const magoTeste = {
     nome: mago.getNome(),
@@ -34,6 +36,7 @@ const guerreiroTeste = {
     equipamento: guerreiro.getEquipamento(),
     inteligencia: guerreiro.getFuria(), // você já estava usando assim
 };
+ 
 
 const necromanteTeste = {
     nome: necromante.getNome(),
@@ -44,6 +47,18 @@ const necromanteTeste = {
     equipamento: necromante.getEquipamento(),
     inteligencia: necromante.getInteligencia(),
 };
+
+const orcTeste = {
+    nome: orc.getNome(),
+    forca: orc.getForca(),
+    mana: orc.getMana(),
+    vida: orc.getVida(),
+    dano: orc.getDano(),
+    equipamento: orc.getEquipamento(),
+};
+
+sessionStorage.setItem("orc", JSON.stringify(orcTeste));
+
 
 function removerClicada() {
     imagens.forEach(function (i) {
@@ -134,7 +149,6 @@ if (imagens.length > 0 && botao) {
 
 window.addEventListener("DOMContentLoaded", () => {
     const imgClasse = document.getElementById("imagem-classe") as HTMLImageElement | null;
-    const statusDiv = document.getElementById("status-classe");
 
     // Se não tiver #imagem-classe, é outra página, não faz nada:
     if (!imgClasse) return;
@@ -145,16 +159,15 @@ window.addEventListener("DOMContentLoaded", () => {
     if (imgSrc) {
         imgClasse.src = imgSrc;
     } else {
-        if (statusDiv) {
-            statusDiv.textContent = "Nenhuma classe selecionada. Volte e escolha uma classe.";
-        }
+        console.warn("Nenhuma classe selecionada. Volte e escolha uma classe.");
         return;
     }
 
+    // Recupera dados da classe escolhida
     const classeId = sessionStorage.getItem("classeSelecionadaId");
     console.log("classeSelecionadaId no combate:", classeId);
 
-    if (!classeId || !statusDiv) return;
+    if (!classeId) return;
 
     const dadosRaw = sessionStorage.getItem(classeId);
     console.log("dadosRaw da classe no combate:", dadosRaw);
@@ -171,13 +184,95 @@ window.addEventListener("DOMContentLoaded", () => {
         inteligencia: number;
     };
 
-    statusDiv.innerHTML = `
-        <h2>${classe.nome}</h2>
-        <p>Vida: ${classe.vida}</p>
-        <p>Força: ${classe.forca}</p>
-        <p>Mana: ${classe.mana}</p>
-        <p>Dano: ${classe.dano}</p>
-        <p>Equipamento: ${classe.equipamento}</p>
-        <p>Atributo especial: ${classe.inteligencia}</p>
-    `;
+    // Recupera o orc
+    const orcRaw = sessionStorage.getItem("orc");
+    if (!orcRaw) {
+        console.warn("Orc não encontrado no sessionStorage.");
+        return;
+    }
+
+    const orc = JSON.parse(orcRaw) as {
+        nome: string;
+        forca: number;
+        mana: number;
+        vida: number;
+        dano: number;
+        equipamento: string;
+    };
+
+    // Pega os elementos da HUD e painel
+    const spanVidaJogadorEl = document.getElementById("vida-jogador");
+    const spanVidaOrcEl = document.getElementById("vida-orc");
+    const painelCombateEl = document.getElementById("painel-combate");
+    const botaoAtacarEl = document.getElementById("btn-atacar");
+
+    if (!spanVidaJogadorEl || !spanVidaOrcEl || !painelCombateEl || !botaoAtacarEl) {
+        console.warn("Elementos da interface de combate não encontrados.");
+        return;
+    }
+
+    // Aqui fazemos o cast definitivo: a partir daqui o TS sabe que NÃO é null
+    const spanVidaJogador = spanVidaJogadorEl as HTMLSpanElement;
+    const spanVidaOrc = spanVidaOrcEl as HTMLSpanElement;
+    const painelCombate = painelCombateEl as HTMLDivElement;
+    const botaoAtacar = botaoAtacarEl as HTMLButtonElement;
+
+    // Vida atual de cada um
+    let vidaJogadorAtual = classe.vida;
+    let vidaOrcAtual = orc.vida;
+    let jogoAcabou = false;
+
+    // Atualiza HUD
+    function atualizarHUD() {
+        spanVidaJogador.textContent = vidaJogadorAtual.toString();
+        spanVidaOrc.textContent = vidaOrcAtual.toString();
+    }
+
+    // Registra mensagem na telinha e no console
+    function logCombate(mensagem: string) {
+        console.log(mensagem);
+        const p = document.createElement("p");
+        p.textContent = mensagem;
+        painelCombate.appendChild(p);
+        painelCombate.scrollTop = painelCombate.scrollHeight;
+    }
+
+    // Inicializa HUD
+    atualizarHUD();
+    logCombate(`Um ${orc.nome} apareceu! Prepare-se para o combate, ${classe.nome}.`);
+
+    // Sistema de combate por turnos
+    botaoAtacar.addEventListener("click", () => {
+        if (jogoAcabou) return;
+
+        // --- Turno do jogador ---
+        const danoJogador = classe.dano;
+        vidaOrcAtual -= danoJogador;
+        if (vidaOrcAtual < 0) vidaOrcAtual = 0;
+
+        logCombate(`O jogador ${classe.nome} atacou o inimigo e causou ${danoJogador} de dano.`);
+        atualizarHUD();
+
+        if (vidaOrcAtual <= 0) {
+            logCombate(`O ${orc.nome} foi derrotado! Você venceu o combate!`);
+            jogoAcabou = true;
+            return;
+        }
+
+        // --- Turno do orc ---
+        const danoOrc = orc.dano;
+        vidaJogadorAtual -= danoOrc;
+        if (vidaJogadorAtual < 0) vidaJogadorAtual = 0;
+
+        logCombate(`O ${orc.nome} desferiu ${danoOrc} de dano no jogador ${classe.nome}.`);
+        atualizarHUD();
+
+        if (vidaJogadorAtual <= 0) {
+            logCombate(`Você foi derrotado pelo ${orc.nome}...`);
+            jogoAcabou = true;
+            return;
+        }
+    });
 });
+
+
