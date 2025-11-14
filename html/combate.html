@@ -11,18 +11,26 @@
     <!-- <audio src="/trilha/batalha.mp3" autoplay loop></audio>  -->
     <h1>COMBATE</h1>
 
-    <!-- HUD de vidas -->
     <div class="hud">
-        <div class="hud-jogador">
-            Jogador HP: <span id="vida-jogador">0</span>
+    <div class="barra-container">
+        <span class="titulo-barra">Jogador</span>
+        <div class="barra-vida">
+            <div id="barra-vida-jogador" class="barra"></div>
         </div>
-        <div class="hud-orc">
-            Orc HP: <span id="vida-orc">0</span>
-        </div>
+        <span id="vida-jogador" class="hp-texto">0</span>
     </div>
 
+    <div class="barra-container">
+        <span class="titulo-barra">Orc</span>
+        <div class="barra-vida">
+            <div id="barra-vida-orc" class="barra"></div>
+        </div>
+        <span id="vida-orc" class="hp-texto">0</span>
+    </div>
+</div>
+
     <div class="container-combate">
-        <!-- A imagem da classe escolhida vem aqui -->
+        
         <img id="imagem-classe" class="personagem-escolhido" alt="Classe escolhida">       
     </div>
 
@@ -30,10 +38,9 @@
         <img class="classe-orc" src="/imagens/orc.png" alt="Orc">
     </div>
 
-    <!-- Telinha de combate -->
+ 
     <div id="painel-combate"></div>
 
-    <!-- Botão para avançar o turno -->
     <button id="btn-atacar">ATACAR</button>
 </body>
 </html>

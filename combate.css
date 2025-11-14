@@ -58,17 +58,75 @@ body{
 .imagem {
     display: inline-block;
     vertical-align: middle;
-    width: 45%;
+    width: 40%;
+    height: auto;           
     text-align: center;
+    margin-top: 20px;        
 }
 
+
 #imagem-classe {
-    width: 450px;
-    image-rendering: pixelated;
+    width: 270px;
+    height: auto;
 }
 
 .classe-orc {
-    width: 250px;
-    image-rendering: pixelated;
+    width: 200px;           
+    height: auto;
     transform: scaleX(-1);
+}
+
+.hud {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    color: white;
+    font-family: "Consolas", "Courier New", monospace;
+    text-shadow: 2px 2px 4px black;
+    font-size: 18px;
+}
+
+/* Container individual */
+.barra-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 220px;
+}
+
+/* Nome (Jogador / Orc) */
+.titulo-barra {
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+/* Moldura da barra */
+.barra-vida {
+    width: 200px;
+    height: 20px;
+    background-color: #3a3a3a;
+    border: 3px solid #222;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 8px #000 inset;
+}
+
+/* Barra interna (HP real) */
+.barra {
+    height: 100%;
+    background: linear-gradient(90deg, #33ff33, #009900); /* verde bonito */
+    transition: width 0.4s ease-in-out; /* animação quando HP muda */
+}
+
+/* Texto numérico do HP */
+.hp-texto {
+    margin-top: 4px;
+    font-size: 16px;
+}
+
+/* Quando HP estiver baixo */
+.barra.low-hp {
+    background: linear-gradient(90deg, #ff3333, #990000);
 }

@@ -4,7 +4,7 @@ import { Mago } from "./classes/entidades/Mago";
 import { Necromante } from "./classes/entidades/Necromante";
 import { Orc } from "./classes/entidades/Orc";
 
-// ---------------- FUNÇÕES DA TELA DE SELEÇÃO ----------------
+
 
 const imagens = document.querySelectorAll<HTMLImageElement>(".imagens");
 const botao = document.getElementById("escolher") as HTMLButtonElement | null;
@@ -34,7 +34,7 @@ const guerreiroTeste = {
     vida: guerreiro.getVida(),
     dano: guerreiro.getDano(),
     equipamento: guerreiro.getEquipamento(),
-    inteligencia: guerreiro.getFuria(), // você já estava usando assim
+    inteligencia: guerreiro.getFuria(),
 };
  
 
@@ -63,7 +63,7 @@ sessionStorage.setItem("orc", JSON.stringify(orcTeste));
 function removerClicada() {
     imagens.forEach(function (i) {
         i.classList.remove("selecionada");
-        // Restaura imagem estática ao remover seleção
+     
         const src = i.getAttribute('src');
         if (src?.includes('animado')) {
             if (src.includes('guerreiro')) {
@@ -90,15 +90,15 @@ function trocarParaImagemAnimada(img: HTMLImageElement) {
     }
 }
 
-// 🔴 AJUSTADA: agora salva a imagem E o id da classe
+
 function salvarImagemClasse() {
     if (indiceClicado !== null) {
         const imgEl = imagens.item(indiceClicado);
         if (imgEl) {
             const src = imgEl.getAttribute('src') || imgEl.src;
             if (src) {
-                sessionStorage.setItem('imagemClasse', src);          // caminho da imagem
-                sessionStorage.setItem('classeSelecionadaId', imgEl.id); // "guerreiro" | "mago" | "necromante"
+                sessionStorage.setItem('imagemClasse', src);         
+                sessionStorage.setItem('classeSelecionadaId', imgEl.id); 
                 console.log("Salvando imagemClasse:", src);
                 console.log("Salvando classeSelecionadaId:", imgEl.id);
             }
@@ -127,7 +127,7 @@ function verificarSeClasseSelecionada() {
     }
 }
 
-// ⚠️ Só adiciona os eventos se estivermos na tela que TEM as imagens e o botão
+
 if (imagens.length > 0 && botao) {
     imagens.forEach(function (img, index) {
         img.addEventListener("click", function () {
@@ -150,7 +150,6 @@ if (imagens.length > 0 && botao) {
 window.addEventListener("DOMContentLoaded", () => {
     const imgClasse = document.getElementById("imagem-classe") as HTMLImageElement | null;
 
-    // Se não tiver #imagem-classe, é outra página, não faz nada:
     if (!imgClasse) return;
 
     const imgSrc = sessionStorage.getItem("imagemClasse");
@@ -163,7 +162,6 @@ window.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Recupera dados da classe escolhida
     const classeId = sessionStorage.getItem("classeSelecionadaId");
     console.log("classeSelecionadaId no combate:", classeId);
 
@@ -184,7 +182,7 @@ window.addEventListener("DOMContentLoaded", () => {
         inteligencia: number;
     };
 
-    // Recupera o orc
+
     const orcRaw = sessionStorage.getItem("orc");
     if (!orcRaw) {
         console.warn("Orc não encontrado no sessionStorage.");
@@ -200,7 +198,7 @@ window.addEventListener("DOMContentLoaded", () => {
         equipamento: string;
     };
 
-    // Pega os elementos da HUD e painel
+  
     const spanVidaJogadorEl = document.getElementById("vida-jogador");
     const spanVidaOrcEl = document.getElementById("vida-orc");
     const painelCombateEl = document.getElementById("painel-combate");
@@ -211,24 +209,40 @@ window.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Aqui fazemos o cast definitivo: a partir daqui o TS sabe que NÃO é null
+
     const spanVidaJogador = spanVidaJogadorEl as HTMLSpanElement;
     const spanVidaOrc = spanVidaOrcEl as HTMLSpanElement;
     const painelCombate = painelCombateEl as HTMLDivElement;
     const botaoAtacar = botaoAtacarEl as HTMLButtonElement;
 
-    // Vida atual de cada um
+
     let vidaJogadorAtual = classe.vida;
     let vidaOrcAtual = orc.vida;
     let jogoAcabou = false;
 
-    // Atualiza HUD
     function atualizarHUD() {
-        spanVidaJogador.textContent = vidaJogadorAtual.toString();
-        spanVidaOrc.textContent = vidaOrcAtual.toString();
-    }
+    // Texto numérico
+    spanVidaJogador.textContent = vidaJogadorAtual.toString();
+    spanVidaOrc.textContent = vidaOrcAtual.toString();
 
-    // Registra mensagem na telinha e no console
+    // Barras gráficas
+    const barraJogador = document.getElementById("barra-vida-jogador") as HTMLDivElement;
+    const barraOrc = document.getElementById("barra-vida-orc") as HTMLDivElement;
+
+    const pctJogador = (vidaJogadorAtual / classe.vida) * 100;
+    const pctOrc = (vidaOrcAtual / orc.vida) * 100;
+
+    barraJogador.style.width = pctJogador + "%";
+    barraOrc.style.width = pctOrc + "%";
+
+    if (pctJogador <= 30) barraJogador.classList.add("low-hp");
+    else barraJogador.classList.remove("low-hp");
+
+    if (pctOrc <= 30) barraOrc.classList.add("low-hp");
+    else barraOrc.classList.remove("low-hp");
+}
+
+   
     function logCombate(mensagem: string) {
         console.log(mensagem);
         const p = document.createElement("p");
@@ -237,15 +251,13 @@ window.addEventListener("DOMContentLoaded", () => {
         painelCombate.scrollTop = painelCombate.scrollHeight;
     }
 
-    // Inicializa HUD
+   
     atualizarHUD();
     logCombate(`Um ${orc.nome} apareceu! Prepare-se para o combate, ${classe.nome}.`);
 
-    // Sistema de combate por turnos
     botaoAtacar.addEventListener("click", () => {
         if (jogoAcabou) return;
 
-        // --- Turno do jogador ---
         const danoJogador = classe.dano;
         vidaOrcAtual -= danoJogador;
         if (vidaOrcAtual < 0) vidaOrcAtual = 0;
