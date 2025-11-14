@@ -15,7 +15,7 @@ let indiceClicado: number | null = null;
 const guerreiro = new Guerreiro("Vitor", 40, 2, 100, 50, "Espada do Deus do Trovão", 8);
 const mago = new Mago("maguinho", 30, 20, 65, 40, "Cajado Lendário do dragão", 7);
 const necromante = new Necromante("Necromante", 25, 25, 50, 35, "Varinha Do Rei Antigo", 9);
-const orc = new Orc("Orc bravo", 40, 10, 50, 20, "Machado cego")
+const orc = new Orc("Orc bravo", 40, 10, 100, 10, "Machado cego")
 
 const magoTeste = {
     nome: mago.getNome(),
@@ -145,11 +145,12 @@ if (imagens.length > 0 && botao) {
     });
 }
 
-// ---------------- CÓDIGO DA PÁGINA combate.html ----------------
-
+// combate.html
 window.addEventListener("DOMContentLoaded", () => {
     const imgClasse = document.getElementById("imagem-classe") as HTMLImageElement | null;
-
+    const musicaVitoria = new Audio("/trilha/wining theme song.mp3");
+    const trilhaDeFundo = document.getElementById("trilha_de_fundo_combate") as HTMLAudioElement;
+    const musicaDerrota = new Audio("/trilha/defeat_song_effect.mp3");
     if (!imgClasse) return;
 
     const imgSrc = sessionStorage.getItem("imagemClasse");
@@ -221,11 +222,11 @@ window.addEventListener("DOMContentLoaded", () => {
     let jogoAcabou = false;
 
     function atualizarHUD() {
-    // Texto numérico
+
     spanVidaJogador.textContent = vidaJogadorAtual.toString();
     spanVidaOrc.textContent = vidaOrcAtual.toString();
 
-    // Barras gráficas
+ 
     const barraJogador = document.getElementById("barra-vida-jogador") as HTMLDivElement;
     const barraOrc = document.getElementById("barra-vida-orc") as HTMLDivElement;
 
@@ -267,11 +268,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (vidaOrcAtual <= 0) {
             logCombate(`O ${orc.nome} foi derrotado! Você venceu o combate!`);
+            pararTrilhaDeFundo();
+            tocarMusicaVitoria();
             jogoAcabou = true;
             return;
         }
 
-        // --- Turno do orc ---
+ 
         const danoOrc = orc.dano;
         vidaJogadorAtual -= danoOrc;
         if (vidaJogadorAtual < 0) vidaJogadorAtual = 0;
@@ -281,10 +284,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (vidaJogadorAtual <= 0) {
             logCombate(`Você foi derrotado pelo ${orc.nome}...`);
+            pararTrilhaDeFundo();
+            tocarMusicaDerrota();
             jogoAcabou = true;
             return;
         }
     });
+
+    function tocarMusicaVitoria(){
+        musicaVitoria.play();
+    }
+
+    function pararTrilhaDeFundo(){
+        trilhaDeFundo.pause();
+    }
+
+    function tocarMusicaDerrota(){
+        musicaDerrota.play();
+    }
+
+
 });
 
 
