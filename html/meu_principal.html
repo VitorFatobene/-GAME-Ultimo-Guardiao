@@ -7,24 +7,31 @@
     <link rel="stylesheet" href="/menu_principal.css">
 </head>
 <body>
-    <audio src="/trilha/1.MainTheme-320bit(chosic.com).mp3"></audio>
+    <audio id="musica-menu" src="/trilha/1.MainTheme-320bit(chosic.com).mp3"></audio>
+
     <h1>O ÚLTIMO GUARDIÃO</h1>
+
     <div class="botoes">
-        <button class="botao_menu"><a href="index.html">JOGAR</a></button>
+        <button class="botao_menu">
+            <a href="index.html">JOGAR</a>
+        </button>
+
         <button class="botao_menu" id="botao_credito">CRÉDITOS</button>
     </div>
-     <script defer>
-        const audio = document.getElementById('bgm');
 
-        function iniciarMusica() {
-        audio.play().catch(err => console.log(err));
+    <script defer>
+        const musica = document.getElementById("musica-menu");
+        const botaoCreditos = document.getElementById("botao_credito");
 
-        window.removeEventListener('click', iniciarMusica);
-        window.removeEventListener('keydown', iniciarMusica);
+     
+        function tocarMusica() {
+            musica.volume = 1.0;
+            musica.loop = true;
+            musica.play().catch(err => console.log(err));
         }
-        
-        window.addEventListener('click', iniciarMusica);
-        window.addEventListener('keydown', iniciarMusica);
-   </script>
+
+      
+        botaoCreditos.addEventListener("click", tocarMusica);
+    </script>
 </body>
 </html>
