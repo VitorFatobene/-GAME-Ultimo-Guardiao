@@ -8,35 +8,39 @@
     <script src="/dist/bundle.js" defer></script>
 </head>
 <body>
-    <audio id = "trilha_de_fundo_combate" src="/trilha/batalha.mp3" autoplay></audio>
+    <audio id="trilha_de_fundo_combate" src="/trilha/batalha.mp3" autoplay></audio>
+
+    <!-- HUD DE VIDAS -->
     <div class="hud">
-    <div class="barra-container">
-        <span class="titulo-barra">Jogador</span>
-        <div class="barra-vida">
-            <div id="barra-vida-jogador" class="barra"></div>
+
+        <div class="barra-container">
+            <span class="titulo-barra">Jogador</span>
+            <div class="barra-vida">
+                <div id="barra-vida-jogador" class="barra"></div>
+            </div>
+            <span id="vida-jogador" class="hp-texto">0</span>
         </div>
-        <span id="vida-jogador" class="hp-texto">0</span>
+
+        <div class="barra-container">
+            <span class="titulo-barra">Inimigo</span>
+            <div class="barra-vida">
+                <div id="barra-vida-inimigo" class="barra"></div>
+            </div>
+            <span id="vida-inimigo" class="hp-texto">0</span>
+        </div>
+
     </div>
 
-    <div class="barra-container">
-        <span class="titulo-barra">Orc</span>
-        <div class="barra-vida">
-            <div id="barra-vida-orc" class="barra"></div>
-        </div>
-        <span id="vida-orc" class="hp-texto">0</span>
-    </div>
-</div>
-
+    <!-- CAMPO DE BATALHA -->
     <div class="container-combate">
-        
-        <img id="imagem-classe" class="personagem-escolhido" alt="Classe escolhida">       
+        <img id="imagem-classe" class="personagem-escolhido" alt="Classe escolhida">
     </div>
 
     <div class="imagem">
-        <img class="classe-orc" src="/imagens/orc.png" alt="Orc">
+        <img id="imagem-inimigo" class="classe-orc" src="/imagens/orc.png" alt="Inimigo">
     </div>
 
- 
+    <!-- CONSOLE DE COMBATE -->
     <div id="painel-combate"></div>
 
     <button id="btn-atacar">ATACAR</button>
