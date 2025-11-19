@@ -13,21 +13,21 @@ const botao = document.getElementById("escolher") as HTMLButtonElement | null;
 let classeSelecionada = false;
 let indiceClicado: number | null = null;
 
-// Instâncias
+
 const guerreiro = new Guerreiro("Vitor", 40, 2, 100, 50, "Espada do Trovão", 8);
 const mago = new Mago("Maguinho", 30, 20, 65, 40, "Cajado Lendário", 7);
 const necromante = new Necromante("Necromante", 25, 25, 50, 35, "Varinha Antiga", 9);
 const orc = new Orc("Orc Bravo", 40, 10, 50, 20, "Machado Cego");
-const magoCorrompido = new MagoCorrompido("Mago Corrompido", 45, 80, 90, 25, "Cajado Sombrio");
+const magoCorrompido = new MagoCorrompido("Mago Corrompido", 30, 80, 90, 25, "Cajado Sombrio");
 
-// Objetos a salvar
+
 const classesJson: Record<string, any> = {
     guerreiro: { ...guerreiro, nivel: 1 },
     mago: { ...mago, nivel: 1 },
     necromante: { ...necromante, nivel: 1 },
 };
 
-// Salvar inimigos
+
 localStorage.setItem("orc", JSON.stringify({
     nome: orc.getNome(),
     forca: orc.getForca(),
@@ -46,7 +46,7 @@ localStorage.setItem("magoCorrompido", JSON.stringify({
     equipamento: magoCorrompido.getEquipamento()
 }));
 
-// Seleção visual
+
 function removerClicada() {
     imagens.forEach(img => img.classList.remove("selecionada"));
 }
@@ -84,7 +84,6 @@ function verificarSeClasseSelecionada() {
     window.location.href = "combate.html";
 }
 
-// Eventos tela seleção
 if (imagens.length > 0 && botao) {
     imagens.forEach((img, index) => {
         img.addEventListener("click", () => {
@@ -171,7 +170,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 localStorage.setItem(classeId, JSON.stringify(classeJson));
 
-                // Próximo inimigo
+               
                 fase = 2;
                 inimigo = JSON.parse(localStorage.getItem("magoCorrompido")!);
                 vidaInimigo = inimigo.vida;
