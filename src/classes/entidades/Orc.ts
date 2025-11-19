@@ -51,7 +51,7 @@ export class Orc extends Classe_Mae{
     }
     
     public toString(): String{
-        return "Nome: " + this.nome + ", Forca: " + this.forca + ", Mana: " + this.mana + ", Vida: " + this.vida + ", Equipamento: " + this.equipamento + ", Inteligencia: " + this.inteligencia;
+        return "Nome: " + this.nome + ", Forca: " + this.forca + ", Mana: " + this.mana + ", Vida: " + this.vida + ", Equipamento: " + this.equipamento;
     }
     
     public calcularDano(): void{
@@ -59,7 +59,7 @@ export class Orc extends Classe_Mae{
     }
 
     public atacar(): void {
-        console.log("Necromante atacou com " + this.equipamento + " e desferiu " + this.dano.toFixed(2) +
+        console.log("Orc atacou com " + this.equipamento + " e desferiu " + this.dano.toFixed(2) +
             " de dano");
     }
 }

@@ -5,16 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Combate</title>
     <link rel="stylesheet" href="/combate.css">
-    <script src="/dist/bundle.js" defer></script> <!-- TS compilado dessa página -->
+    <script src="/dist/bundle.js" defer></script>
 </head>
 <body>
-    <h1>COMBATE</h1>
+    <audio id = "trilha_de_fundo_combate" src="/trilha/batalha.mp3" autoplay></audio>
+    <div class="hud">
+    <div class="barra-container">
+        <span class="titulo-barra">Jogador</span>
+        <div class="barra-vida">
+            <div id="barra-vida-jogador" class="barra"></div>
+        </div>
+        <span id="vida-jogador" class="hp-texto">0</span>
+    </div>
+
+    <div class="barra-container">
+        <span class="titulo-barra">Orc</span>
+        <div class="barra-vida">
+            <div id="barra-vida-orc" class="barra"></div>
+        </div>
+        <span id="vida-orc" class="hp-texto">0</span>
+    </div>
+</div>
 
     <div class="container-combate">
-        <!-- A imagem da classe escolhida vem aqui -->
-        <img id="imagem-classe" alt="Classe escolhida">
-
-       
+        
+        <img id="imagem-classe" class="personagem-escolhido" alt="Classe escolhida">       
     </div>
+
+    <div class="imagem">
+        <img class="classe-orc" src="/imagens/orc.png" alt="Orc">
+    </div>
+
+ 
+    <div id="painel-combate"></div>
+
+    <button id="btn-atacar">ATACAR</button>
 </body>
 </html>

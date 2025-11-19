@@ -2,8 +2,9 @@ import { Classe_Mae } from "./classes/entidades/Classe_Mae";
 import { Guerreiro } from "./classes/entidades/Guerreiro";
 import { Mago } from "./classes/entidades/Mago";
 import { Necromante } from "./classes/entidades/Necromante";
+import { Orc } from "./classes/entidades/Orc";
 
-// ---------------- FUNÇÕES DA TELA DE SELEÇÃO ----------------
+
 
 const imagens = document.querySelectorAll<HTMLImageElement>(".imagens");
 const botao = document.getElementById("escolher") as HTMLButtonElement | null;
@@ -14,6 +15,7 @@ let indiceClicado: number | null = null;
 const guerreiro = new Guerreiro("Vitor", 40, 2, 100, 50, "Espada do Deus do Trovão", 8);
 const mago = new Mago("maguinho", 30, 20, 65, 40, "Cajado Lendário do dragão", 7);
 const necromante = new Necromante("Necromante", 25, 25, 50, 35, "Varinha Do Rei Antigo", 9);
+const orc = new Orc("Orc bravo", 40, 10, 100, 10, "Machado cego")
 
 const magoTeste = {
     nome: mago.getNome(),
@@ -32,8 +34,9 @@ const guerreiroTeste = {
     vida: guerreiro.getVida(),
     dano: guerreiro.getDano(),
     equipamento: guerreiro.getEquipamento(),
-    inteligencia: guerreiro.getFuria(), // você já estava usando assim
+    inteligencia: guerreiro.getFuria(),
 };
+ 
 
 const necromanteTeste = {
     nome: necromante.getNome(),
@@ -45,10 +48,22 @@ const necromanteTeste = {
     inteligencia: necromante.getInteligencia(),
 };
 
+const orcTeste = {
+    nome: orc.getNome(),
+    forca: orc.getForca(),
+    mana: orc.getMana(),
+    vida: orc.getVida(),
+    dano: orc.getDano(),
+    equipamento: orc.getEquipamento(),
+};
+
+sessionStorage.setItem("orc", JSON.stringify(orcTeste));
+
+
 function removerClicada() {
     imagens.forEach(function (i) {
         i.classList.remove("selecionada");
-        // Restaura imagem estática ao remover seleção
+     
         const src = i.getAttribute('src');
         if (src?.includes('animado')) {
             if (src.includes('guerreiro')) {
@@ -75,15 +90,15 @@ function trocarParaImagemAnimada(img: HTMLImageElement) {
     }
 }
 
-// 🔴 AJUSTADA: agora salva a imagem E o id da classe
+
 function salvarImagemClasse() {
     if (indiceClicado !== null) {
         const imgEl = imagens.item(indiceClicado);
         if (imgEl) {
             const src = imgEl.getAttribute('src') || imgEl.src;
             if (src) {
-                sessionStorage.setItem('imagemClasse', src);          // caminho da imagem
-                sessionStorage.setItem('classeSelecionadaId', imgEl.id); // "guerreiro" | "mago" | "necromante"
+                sessionStorage.setItem('imagemClasse', src);         
+                sessionStorage.setItem('classeSelecionadaId', imgEl.id); 
                 console.log("Salvando imagemClasse:", src);
                 console.log("Salvando classeSelecionadaId:", imgEl.id);
             }
@@ -112,7 +127,7 @@ function verificarSeClasseSelecionada() {
     }
 }
 
-// ⚠️ Só adiciona os eventos se estivermos na tela que TEM as imagens e o botão
+
 if (imagens.length > 0 && botao) {
     imagens.forEach(function (img, index) {
         img.addEventListener("click", function () {
@@ -130,13 +145,12 @@ if (imagens.length > 0 && botao) {
     });
 }
 
-// ---------------- CÓDIGO DA PÁGINA combate.html ----------------
-
+// combate.html
 window.addEventListener("DOMContentLoaded", () => {
     const imgClasse = document.getElementById("imagem-classe") as HTMLImageElement | null;
-    const statusDiv = document.getElementById("status-classe");
-
-    // Se não tiver #imagem-classe, é outra página, não faz nada:
+    const musicaVitoria = new Audio("/trilha/wining theme song.mp3");
+    const trilhaDeFundo = document.getElementById("trilha_de_fundo_combate") as HTMLAudioElement;
+    const musicaDerrota = new Audio("/trilha/defeat_song_effect.mp3");
     if (!imgClasse) return;
 
     const imgSrc = sessionStorage.getItem("imagemClasse");
@@ -145,16 +159,14 @@ window.addEventListener("DOMContentLoaded", () => {
     if (imgSrc) {
         imgClasse.src = imgSrc;
     } else {
-        if (statusDiv) {
-            statusDiv.textContent = "Nenhuma classe selecionada. Volte e escolha uma classe.";
-        }
+        console.warn("Nenhuma classe selecionada. Volte e escolha uma classe.");
         return;
     }
 
     const classeId = sessionStorage.getItem("classeSelecionadaId");
     console.log("classeSelecionadaId no combate:", classeId);
 
-    if (!classeId || !statusDiv) return;
+    if (!classeId) return;
 
     const dadosRaw = sessionStorage.getItem(classeId);
     console.log("dadosRaw da classe no combate:", dadosRaw);
@@ -171,13 +183,127 @@ window.addEventListener("DOMContentLoaded", () => {
         inteligencia: number;
     };
 
-    statusDiv.innerHTML = `
-        <h2>${classe.nome}</h2>
-        <p>Vida: ${classe.vida}</p>
-        <p>Força: ${classe.forca}</p>
-        <p>Mana: ${classe.mana}</p>
-        <p>Dano: ${classe.dano}</p>
-        <p>Equipamento: ${classe.equipamento}</p>
-        <p>Atributo especial: ${classe.inteligencia}</p>
-    `;
+
+    const orcRaw = sessionStorage.getItem("orc");
+    if (!orcRaw) {
+        console.warn("Orc não encontrado no sessionStorage.");
+        return;
+    }
+
+    const orc = JSON.parse(orcRaw) as {
+        nome: string;
+        forca: number;
+        mana: number;
+        vida: number;
+        dano: number;
+        equipamento: string;
+    };
+
+  
+    const spanVidaJogadorEl = document.getElementById("vida-jogador");
+    const spanVidaOrcEl = document.getElementById("vida-orc");
+    const painelCombateEl = document.getElementById("painel-combate");
+    const botaoAtacarEl = document.getElementById("btn-atacar");
+
+    if (!spanVidaJogadorEl || !spanVidaOrcEl || !painelCombateEl || !botaoAtacarEl) {
+        console.warn("Elementos da interface de combate não encontrados.");
+        return;
+    }
+
+
+    const spanVidaJogador = spanVidaJogadorEl as HTMLSpanElement;
+    const spanVidaOrc = spanVidaOrcEl as HTMLSpanElement;
+    const painelCombate = painelCombateEl as HTMLDivElement;
+    const botaoAtacar = botaoAtacarEl as HTMLButtonElement;
+
+
+    let vidaJogadorAtual = classe.vida;
+    let vidaOrcAtual = orc.vida;
+    let jogoAcabou = false;
+
+    function atualizarHUD() {
+
+    spanVidaJogador.textContent = vidaJogadorAtual.toString();
+    spanVidaOrc.textContent = vidaOrcAtual.toString();
+
+ 
+    const barraJogador = document.getElementById("barra-vida-jogador") as HTMLDivElement;
+    const barraOrc = document.getElementById("barra-vida-orc") as HTMLDivElement;
+
+    const pctJogador = (vidaJogadorAtual / classe.vida) * 100;
+    const pctOrc = (vidaOrcAtual / orc.vida) * 100;
+
+    barraJogador.style.width = pctJogador + "%";
+    barraOrc.style.width = pctOrc + "%";
+
+    if (pctJogador <= 30) barraJogador.classList.add("low-hp");
+    else barraJogador.classList.remove("low-hp");
+
+    if (pctOrc <= 30) barraOrc.classList.add("low-hp");
+    else barraOrc.classList.remove("low-hp");
+}
+
+   
+    function logCombate(mensagem: string) {
+        console.log(mensagem);
+        const p = document.createElement("p");
+        p.textContent = mensagem;
+        painelCombate.appendChild(p);
+        painelCombate.scrollTop = painelCombate.scrollHeight;
+    }
+
+   
+    atualizarHUD();
+    logCombate(`Um ${orc.nome} apareceu! Prepare-se para o combate, ${classe.nome}.`);
+
+    botaoAtacar.addEventListener("click", () => {
+        if (jogoAcabou) return;
+
+        const danoJogador = classe.dano;
+        vidaOrcAtual -= danoJogador;
+        if (vidaOrcAtual < 0) vidaOrcAtual = 0;
+
+        logCombate(`O jogador ${classe.nome} atacou o inimigo e causou ${danoJogador} de dano.`);
+        atualizarHUD();
+
+        if (vidaOrcAtual <= 0) {
+            logCombate(`O ${orc.nome} foi derrotado! Você venceu o combate!`);
+            pararTrilhaDeFundo();
+            tocarMusicaVitoria();
+            jogoAcabou = true;
+            return;
+        }
+
+ 
+        const danoOrc = orc.dano;
+        vidaJogadorAtual -= danoOrc;
+        if (vidaJogadorAtual < 0) vidaJogadorAtual = 0;
+
+        logCombate(`O ${orc.nome} desferiu ${danoOrc} de dano no jogador ${classe.nome}.`);
+        atualizarHUD();
+
+        if (vidaJogadorAtual <= 0) {
+            logCombate(`Você foi derrotado pelo ${orc.nome}...`);
+            pararTrilhaDeFundo();
+            tocarMusicaDerrota();
+            jogoAcabou = true;
+            return;
+        }
+    });
+
+    function tocarMusicaVitoria(){
+        musicaVitoria.play();
+    }
+
+    function pararTrilhaDeFundo(){
+        trilhaDeFundo.pause();
+    }
+
+    function tocarMusicaDerrota(){
+        musicaDerrota.play();
+    }
+
+
 });
+
+
