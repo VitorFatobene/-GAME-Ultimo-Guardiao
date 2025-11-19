@@ -71,7 +71,6 @@ function salvarImagemClasse() {
     localStorage.setItem("classeSelecionadaId", img.id);
 }
 
-// Validar e salvar classe
 function verificarSeClasseSelecionada() {
     if (!classeSelecionada) {
         alert("Selecione uma classe");
@@ -111,6 +110,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const musicaVitoria = new Audio("/trilha/wining theme song.mp3");
     const trilhaDeFundo = document.getElementById("trilha_de_fundo_combate") as HTMLAudioElement;
     const musicaDerrota = new Audio("/trilha/defeat_song_effect.mp3");
+    const ataqueMagico = new Audio("/trilha/ataque necromante.mp3");
 
     if (!imgClasse || !imgInimigo) return;
 
@@ -154,17 +154,14 @@ window.addEventListener("DOMContentLoaded", () => {
     atualizarHUD();
     log("Um Orc apareceu!");
 
-    // Lógica de ataque
     btnAtacar.addEventListener("click", () => {
         if (jogoAcabou) return;
-
-        // Jogador ataca
+        somAtaqueMagico();
         vidaInimigo -= classeJson.dano;
         if (vidaInimigo < 0) vidaInimigo = 0;
         log(`Você causou ${classeJson.dano} de dano!`);
         atualizarHUD();
 
-        // Inimigo morto → próxima fase
         if (vidaInimigo <= 0) {
                 tocarMusicaVitoria()
             if (fase === 1) {
@@ -219,5 +216,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function tocarMusicaDerrota(){
         musicaDerrota.play();
+    }
+
+    function somAtaqueMagico(){
+        ataqueMagico.play()
     }
 });
