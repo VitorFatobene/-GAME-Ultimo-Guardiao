@@ -3,295 +3,213 @@ import { Guerreiro } from "./classes/entidades/Guerreiro";
 import { Mago } from "./classes/entidades/Mago";
 import { Necromante } from "./classes/entidades/Necromante";
 import { Orc } from "./classes/entidades/Orc";
+import { MagoCorrompido } from "./classes/entidades/MagoCorrompido";
 
-
+// ---------------- SELEÇÃO DE CLASSES ----------------
 
 const imagens = document.querySelectorAll<HTMLImageElement>(".imagens");
 const botao = document.getElementById("escolher") as HTMLButtonElement | null;
 
-let classeSelecionada: boolean = false;
+let classeSelecionada = false;
 let indiceClicado: number | null = null;
 
-const guerreiro = new Guerreiro("Vitor", 40, 2, 100, 50, "Espada do Deus do Trovão", 8);
-const mago = new Mago("maguinho", 30, 20, 65, 40, "Cajado Lendário do dragão", 7);
-const necromante = new Necromante("Necromante", 25, 25, 50, 35, "Varinha Do Rei Antigo", 9);
-const orc = new Orc("Orc bravo", 40, 10, 100, 10, "Machado cego")
+// Instâncias
+const guerreiro = new Guerreiro("Vitor", 40, 2, 100, 50, "Espada do Trovão", 8);
+const mago = new Mago("Maguinho", 30, 20, 65, 40, "Cajado Lendário", 7);
+const necromante = new Necromante("Necromante", 25, 25, 50, 35, "Varinha Antiga", 9);
+const orc = new Orc("Orc Bravo", 40, 10, 50, 20, "Machado Cego");
+const magoCorrompido = new MagoCorrompido("Mago Corrompido", 45, 80, 90, 25, "Cajado Sombrio");
 
-const magoTeste = {
-    nome: mago.getNome(),
-    forca: mago.getForca(),
-    mana: mago.getMana(),
-    vida: mago.getVida(),
-    dano: mago.getDano(),
-    equipamento: mago.getEquipamento(),
-    inteligencia: mago.getInteligencia(),
+// Objetos a salvar
+const classesJson: Record<string, any> = {
+    guerreiro: { ...guerreiro, nivel: 1 },
+    mago: { ...mago, nivel: 1 },
+    necromante: { ...necromante, nivel: 1 },
 };
 
-const guerreiroTeste = {
-    nome: guerreiro.getNome(),
-    forca: guerreiro.getForca(),
-    mana: guerreiro.getMana(),
-    vida: guerreiro.getVida(),
-    dano: guerreiro.getDano(),
-    equipamento: guerreiro.getEquipamento(),
-    inteligencia: guerreiro.getFuria(),
-};
- 
-
-const necromanteTeste = {
-    nome: necromante.getNome(),
-    forca: necromante.getForca(),
-    mana: necromante.getMana(),
-    vida: necromante.getVida(),
-    dano: necromante.getDano(),
-    equipamento: necromante.getEquipamento(),
-    inteligencia: necromante.getInteligencia(),
-};
-
-const orcTeste = {
+// Salvar inimigos
+localStorage.setItem("orc", JSON.stringify({
     nome: orc.getNome(),
     forca: orc.getForca(),
     mana: orc.getMana(),
     vida: orc.getVida(),
     dano: orc.getDano(),
-    equipamento: orc.getEquipamento(),
-};
+    equipamento: orc.getEquipamento()
+}));
 
-sessionStorage.setItem("orc", JSON.stringify(orcTeste));
+localStorage.setItem("magoCorrompido", JSON.stringify({
+    nome: magoCorrompido.getNome(),
+    forca: magoCorrompido.getForca(),
+    mana: magoCorrompido.getMana(),
+    vida: magoCorrompido.getVida(),
+    dano: magoCorrompido.getDano(),
+    equipamento: magoCorrompido.getEquipamento()
+}));
 
-
+// Seleção visual
 function removerClicada() {
-    imagens.forEach(function (i) {
-        i.classList.remove("selecionada");
-     
-        const src = i.getAttribute('src');
-        if (src?.includes('animado')) {
-            if (src.includes('guerreiro')) {
-                i.src = '/imagens/guerreiro_novo.png';
-            } else if (src.includes('mago')) {
-                i.src = '/imagens/mago_fogo.png';
-            } else if (src.includes('necromante')) {
-                i.src = '/imagens/necromante_novo.png';
-            }
-        }
-    });
+    imagens.forEach(img => img.classList.remove("selecionada"));
 }
 
-function trocarParaImagemAnimada(img: HTMLImageElement) {
-    const imagensAnimadas = {
-        '/imagens/guerreiro_novo.png': '/imagens/guerreiro animado.gif',
-        '/imagens/mago_fogo.png': '/imagens/mago animado.gif',
-        '/imagens/necromante_novo.png': '/imagens/necromante animado.gif'
+function trocarParaAnimada(img: HTMLImageElement) {
+    const animadas: any = {
+        "/imagens/guerreiro_novo.png": "/imagens/guerreiro animado.gif",
+        "/imagens/mago_fogo.png": "/imagens/mago animado.gif",
+        "/imagens/necromante_novo.png": "/imagens/necromante animado.gif"
     };
 
-    const srcAtual = img.getAttribute('src');
-    if (srcAtual && srcAtual in imagensAnimadas) {
-        img.src = imagensAnimadas[srcAtual as keyof typeof imagensAnimadas];
-    }
+    const src = img.getAttribute("src");
+    if (src && animadas[src]) img.src = animadas[src];
 }
-
 
 function salvarImagemClasse() {
-    if (indiceClicado !== null) {
-        const imgEl = imagens.item(indiceClicado);
-        if (imgEl) {
-            const src = imgEl.getAttribute('src') || imgEl.src;
-            if (src) {
-                sessionStorage.setItem('imagemClasse', src);         
-                sessionStorage.setItem('classeSelecionadaId', imgEl.id); 
-                console.log("Salvando imagemClasse:", src);
-                console.log("Salvando classeSelecionadaId:", imgEl.id);
-            }
-        }
-    }
+    if (indiceClicado === null) return;
+
+    const img = imagens.item(indiceClicado)!;
+
+    localStorage.setItem("imagemClasse", img.src);
+    localStorage.setItem("classeSelecionadaId", img.id);
 }
 
+// Validar e salvar classe
 function verificarSeClasseSelecionada() {
-    try {
-        if (classeSelecionada == false) {
-            throw new Error("Selecione uma classe");
-        }
-
-        if (indiceClicado == 0) {
-            sessionStorage.setItem("guerreiro", JSON.stringify(guerreiroTeste));
-        } else if (indiceClicado == 1) {
-            sessionStorage.setItem("mago", JSON.stringify(magoTeste));
-        } else if (indiceClicado == 2) {
-            sessionStorage.setItem("necromante", JSON.stringify(necromanteTeste));
-        }
-
-        window.location.href = 'combate.html';
-
-    } catch (erro) {
-        alert((erro as Error).message);
+    if (!classeSelecionada) {
+        alert("Selecione uma classe");
+        return;
     }
+
+    const id = imagens.item(indiceClicado!)!.id;
+
+    localStorage.setItem(id, JSON.stringify(classesJson[id]));
+
+    window.location.href = "combate.html";
 }
 
-
+// Eventos tela seleção
 if (imagens.length > 0 && botao) {
-    imagens.forEach(function (img, index) {
-        img.addEventListener("click", function () {
+    imagens.forEach((img, index) => {
+        img.addEventListener("click", () => {
             removerClicada();
             img.classList.add("selecionada");
+            trocarParaAnimada(img);
             classeSelecionada = true;
             indiceClicado = index;
-            trocarParaImagemAnimada(img);
         });
     });
 
-    botao.addEventListener("click", function () {
+    botao.addEventListener("click", () => {
         salvarImagemClasse();
         verificarSeClasseSelecionada();
     });
 }
 
-// combate.html
+// ---------------- TELA DE COMBATE ----------------
+
 window.addEventListener("DOMContentLoaded", () => {
     const imgClasse = document.getElementById("imagem-classe") as HTMLImageElement | null;
+    const imgInimigo = document.getElementById("imagem-inimigo") as HTMLImageElement | null;
     const musicaVitoria = new Audio("/trilha/wining theme song.mp3");
     const trilhaDeFundo = document.getElementById("trilha_de_fundo_combate") as HTMLAudioElement;
     const musicaDerrota = new Audio("/trilha/defeat_song_effect.mp3");
-    if (!imgClasse) return;
 
-    const imgSrc = sessionStorage.getItem("imagemClasse");
-    console.log("imagemClasse no combate:", imgSrc);
-
-    if (imgSrc) {
-        imgClasse.src = imgSrc;
-    } else {
-        console.warn("Nenhuma classe selecionada. Volte e escolha uma classe.");
-        return;
-    }
-
-    const classeId = sessionStorage.getItem("classeSelecionadaId");
-    console.log("classeSelecionadaId no combate:", classeId);
-
-    if (!classeId) return;
-
-    const dadosRaw = sessionStorage.getItem(classeId);
-    console.log("dadosRaw da classe no combate:", dadosRaw);
-
-    if (!dadosRaw) return;
-
-    const classe = JSON.parse(dadosRaw) as {
-        nome: string;
-        forca: number;
-        mana: number;
-        vida: number;
-        dano: number;
-        equipamento: string;
-        inteligencia: number;
-    };
+    if (!imgClasse || !imgInimigo) return;
 
 
-    const orcRaw = sessionStorage.getItem("orc");
-    if (!orcRaw) {
-        console.warn("Orc não encontrado no sessionStorage.");
-        return;
-    }
+    const classeId = localStorage.getItem("classeSelecionadaId")!;
+    const classeJson = JSON.parse(localStorage.getItem(classeId)!);
 
-    const orc = JSON.parse(orcRaw) as {
-        nome: string;
-        forca: number;
-        mana: number;
-        vida: number;
-        dano: number;
-        equipamento: string;
-    };
-
-  
-    const spanVidaJogadorEl = document.getElementById("vida-jogador");
-    const spanVidaOrcEl = document.getElementById("vida-orc");
-    const painelCombateEl = document.getElementById("painel-combate");
-    const botaoAtacarEl = document.getElementById("btn-atacar");
-
-    if (!spanVidaJogadorEl || !spanVidaOrcEl || !painelCombateEl || !botaoAtacarEl) {
-        console.warn("Elementos da interface de combate não encontrados.");
-        return;
-    }
+    imgClasse.src = localStorage.getItem("imagemClasse")!;
 
 
-    const spanVidaJogador = spanVidaJogadorEl as HTMLSpanElement;
-    const spanVidaOrc = spanVidaOrcEl as HTMLSpanElement;
-    const painelCombate = painelCombateEl as HTMLDivElement;
-    const botaoAtacar = botaoAtacarEl as HTMLButtonElement;
+    let inimigo = JSON.parse(localStorage.getItem("orc")!);
 
+    let vidaJogador = classeJson.vida;
+    let vidaInimigo = inimigo.vida;
 
-    let vidaJogadorAtual = classe.vida;
-    let vidaOrcAtual = orc.vida;
+    const spanVidaJogador = document.getElementById("vida-jogador")!;
+    const spanVidaInimigo = document.getElementById("vida-inimigo")!;
+    const barraJogador = document.getElementById("barra-vida-jogador")!;
+    const barraInimigo = document.getElementById("barra-vida-inimigo")!;
+    const painel = document.getElementById("painel-combate")!;
+    const btnAtacar = document.getElementById("btn-atacar")!;
+
     let jogoAcabou = false;
+    let fase = 1;
 
     function atualizarHUD() {
+        spanVidaJogador.textContent = vidaJogador.toString();
+        spanVidaInimigo.textContent = vidaInimigo.toString();
 
-    spanVidaJogador.textContent = vidaJogadorAtual.toString();
-    spanVidaOrc.textContent = vidaOrcAtual.toString();
-
- 
-    const barraJogador = document.getElementById("barra-vida-jogador") as HTMLDivElement;
-    const barraOrc = document.getElementById("barra-vida-orc") as HTMLDivElement;
-
-    const pctJogador = (vidaJogadorAtual / classe.vida) * 100;
-    const pctOrc = (vidaOrcAtual / orc.vida) * 100;
-
-    barraJogador.style.width = pctJogador + "%";
-    barraOrc.style.width = pctOrc + "%";
-
-    if (pctJogador <= 30) barraJogador.classList.add("low-hp");
-    else barraJogador.classList.remove("low-hp");
-
-    if (pctOrc <= 30) barraOrc.classList.add("low-hp");
-    else barraOrc.classList.remove("low-hp");
-}
-
-   
-    function logCombate(mensagem: string) {
-        console.log(mensagem);
-        const p = document.createElement("p");
-        p.textContent = mensagem;
-        painelCombate.appendChild(p);
-        painelCombate.scrollTop = painelCombate.scrollHeight;
+        barraJogador.style.width = `${(vidaJogador / classeJson.vida) * 100}%`;
+        barraInimigo.style.width = `${(vidaInimigo / inimigo.vida) * 100}%`;
     }
 
-   
-    atualizarHUD();
-    logCombate(`Um ${orc.nome} apareceu! Prepare-se para o combate, ${classe.nome}.`);
+    function log(msg: string) {
+        const p = document.createElement("p");
+        p.textContent = msg;
+        painel.appendChild(p);
+        painel.scrollTop = painel.scrollHeight;
+    }
 
-    botaoAtacar.addEventListener("click", () => {
+    atualizarHUD();
+    log("Um Orc apareceu!");
+
+    // Lógica de ataque
+    btnAtacar.addEventListener("click", () => {
         if (jogoAcabou) return;
 
-        const danoJogador = classe.dano;
-        vidaOrcAtual -= danoJogador;
-        if (vidaOrcAtual < 0) vidaOrcAtual = 0;
-
-        logCombate(`O jogador ${classe.nome} atacou o inimigo e causou ${danoJogador} de dano.`);
+        // Jogador ataca
+        vidaInimigo -= classeJson.dano;
+        if (vidaInimigo < 0) vidaInimigo = 0;
+        log(`Você causou ${classeJson.dano} de dano!`);
         atualizarHUD();
 
-        if (vidaOrcAtual <= 0) {
-            logCombate(`O ${orc.nome} foi derrotado! Você venceu o combate!`);
-            pararTrilhaDeFundo();
-            tocarMusicaVitoria();
-            jogoAcabou = true;
-            return;
+        // Inimigo morto → próxima fase
+        if (vidaInimigo <= 0) {
+                tocarMusicaVitoria()
+            if (fase === 1) {
+                log("Você derrotou o Orc!");
+                classeJson.nivel++;
+                log(`Você subiu para o nível ${classeJson.nivel}!`);
+
+                localStorage.setItem(classeId, JSON.stringify(classeJson));
+
+                // Próximo inimigo
+                fase = 2;
+                inimigo = JSON.parse(localStorage.getItem("magoCorrompido")!);
+                vidaInimigo = inimigo.vida;
+
+                imgInimigo.src = "/imagens/magoCorrompido certo.png";
+                log("Um Mago Corrompido surgiu das trevas!");
+
+                atualizarHUD();
+                return;
+            }
+
+            if (fase === 2) {
+                log("Você derrotou o Mago Corrompido!");
+                log("Fim da batalha!");
+                jogoAcabou = true;
+                return;
+            }
         }
 
- 
-        const danoOrc = orc.dano;
-        vidaJogadorAtual -= danoOrc;
-        if (vidaJogadorAtual < 0) vidaJogadorAtual = 0;
+        
+        vidaJogador -= inimigo.dano;
+        if (vidaJogador < 0) vidaJogador = 0;
 
-        logCombate(`O ${orc.nome} desferiu ${danoOrc} de dano no jogador ${classe.nome}.`);
+        log(`${inimigo.nome} causou ${inimigo.dano} de dano em você.`);
         atualizarHUD();
 
-        if (vidaJogadorAtual <= 0) {
-            logCombate(`Você foi derrotado pelo ${orc.nome}...`);
-            pararTrilhaDeFundo();
-            tocarMusicaDerrota();
+        if (vidaJogador <= 0) {
+            log("Você foi derrotado...");
+            pararTrilhaDeFundo()
+            tocarMusicaDerrota()
             jogoAcabou = true;
-            return;
         }
     });
 
-    function tocarMusicaVitoria(){
+      function tocarMusicaVitoria(){
         musicaVitoria.play();
     }
 
@@ -302,8 +220,4 @@ window.addEventListener("DOMContentLoaded", () => {
     function tocarMusicaDerrota(){
         musicaDerrota.play();
     }
-
-
 });
-
-
