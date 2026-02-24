@@ -5,7 +5,7 @@ import { Necromante } from "./classes/entidades/Necromante";
 import { Orc } from "./classes/entidades/Orc";
 import { MagoCorrompido } from "./classes/entidades/MagoCorrompido";
 
-// ---------------- SELEÇÃO DE CLASSES ----------------
+
 
 const imagens = document.querySelectorAll<HTMLImageElement>(".imagens");
 const botao = document.getElementById("escolher") as HTMLButtonElement | null;
@@ -101,7 +101,7 @@ if (imagens.length > 0 && botao) {
     });
 }
 
-// ---------------- TELA DE COMBATE ----------------
+
 
 window.addEventListener("DOMContentLoaded", () => {
     const imgClasse = document.getElementById("imagem-classe") as HTMLImageElement | null;

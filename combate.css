@@ -2,7 +2,6 @@ body{
     background-image: url(./imagens/fundo_batalha.png);
 }
 
-/* HUD de vidas */
 .hud {
     display: flex;
     justify-content: space-around;
@@ -13,7 +12,7 @@ body{
     font-size: 20px;
 }
 
-/* Telinha de combate */
+
 #painel-combate {
     width: 60%;
     margin: 30px auto 10px auto;
@@ -27,7 +26,7 @@ body{
     font-size: 16px;
 }
 
-/* Botão de atacar */
+
 #btn-atacar {
     display: block;
     margin: 10px auto;
@@ -47,7 +46,7 @@ body{
     transform: scale(1.03);
 }
 
-/* (o resto do seu CSS de imagens pode continuar igual) */
+
 
 .imagem{
     display: flex;
@@ -86,7 +85,7 @@ body{
     font-size: 18px;
 }
 
-/* Container individual */
+
 .barra-container {
     display: flex;
     flex-direction: column;
@@ -94,14 +93,13 @@ body{
     width: 220px;
 }
 
-/* Nome (Jogador / Orc) */
 .titulo-barra {
     margin-bottom: 5px;
     letter-spacing: 2px;
     font-weight: bold;
 }
 
-/* Moldura da barra */
+
 .barra-vida {
     width: 200px;
     height: 20px;
@@ -113,20 +111,19 @@ body{
     box-shadow: 0 0 8px #000 inset;
 }
 
-/* Barra interna (HP real) */
+
 .barra {
     height: 100%;
     background: linear-gradient(90deg, #33ff33, #009900); /* verde bonito */
     transition: width 0.4s ease-in-out; /* animação quando HP muda */
 }
 
-/* Texto numérico do HP */
 .hp-texto {
     margin-top: 4px;
     font-size: 16px;
 }
 
-/* Quando HP estiver baixo */
+
 .barra.low-hp {
     background: linear-gradient(90deg, #ff3333, #990000);
 }
